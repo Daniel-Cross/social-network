@@ -6,6 +6,7 @@ const { check, validationResult } = require('express-validator/check');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
+// Get one profile
 router.get('/me', auth, async (req, res) => {
 	try {
 		const profile = await Profile.findOne({
@@ -22,6 +23,7 @@ router.get('/me', auth, async (req, res) => {
 	}
 });
 
+// Create profile
 router.post(
 	'/',
 	[
@@ -91,5 +93,46 @@ router.post(
 		}
 	}
 );
+
+// Get all profiles
+router.get('/', async (req, res) => {
+	try {
+		const profiles = await Profile.find().populate('user', [ 'name', 'avatar' ]);
+		res.json(profiles);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
+});
+
+// Get specific user profile by ID
+router.get('/user/:user_id', async (req, res) => {
+	try {
+		const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', [ 'name', 'avatar' ]);
+		res.json(profile);
+
+		if (!profile) {
+			return res.status(400).json({ msg: 'Profile not found' });
+		}
+	} catch (err) {
+		console.error(err.message);
+		if (err.kind === 'ObjectId') {
+			return res.status(400).json({ msg: 'Profile not found' });
+		}
+		res.status(500).send('Server error');
+	}
+});
+
+// Delete user profile
+router.delete('/', auth, async (req, res) => {
+	try {
+		await Profile.findOneAndRemove({ user: req.user.id });
+		await User.findOneAndRemove({ _id: req.user.id });
+		res.json({ msg: 'User deleted' });
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
+});
 
 module.exports = router;
