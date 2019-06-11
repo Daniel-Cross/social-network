@@ -1,4 +1,6 @@
 {
   "mongoURI": "mongodb://crossy1686:Manchester16@ds233737.mlab.com:33737/social-network",
-  "jwtToken": "chernobyl"
+  "jwtToken": "chernobyl",
+  "githubClientId": "03ce183c400e671766a4",
+  "githubSecret": "22dee680d47a6a19f7adfd0b84f02e06e0917881"
 }
