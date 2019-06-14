@@ -1,7 +1,25 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
+	const [ formData, setFormData ] = useState({
+		email: '',
+		password: '',
+	});
+
+	const { email, password } = formData;
+
+	const handleInput = (e) => {
+		setFormData({
+			...formData,
+			[e.target.name]: e.target.value,
+		});
+	};
+
+	const handleLogin = (e) => {
+		e.preventDefault();
+	};
+
 	return (
 		<Fragment>
 			<div className="alert alert-danger">Invalid credentials</div>
@@ -9,12 +27,25 @@ const Login = () => {
 			<p className="lead">
 				<i className="fas fa-user" /> Sign into Your Account
 			</p>
-			<form className="form" action="dashboard.html">
+			<form className="form" onSubmit={handleLogin}>
 				<div className="form-group">
-					<input type="email" placeholder="Email Address" name="email" required />
+					<input
+						type="email"
+						placeholder="Email Address"
+						name="email"
+						required
+						value={email}
+						onChange={handleInput}
+					/>
 				</div>
 				<div className="form-group">
-					<input type="password" placeholder="Password" name="password" />
+					<input
+						type="password"
+						placeholder="Password"
+						name="password"
+						value={password}
+						onChange={handleInput}
+					/>
 				</div>
 				<input type="submit" className="btn btn-primary" value="Login" />
 			</form>
